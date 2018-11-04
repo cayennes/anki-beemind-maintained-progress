@@ -1,27 +1,44 @@
+import time
 from anki import hooks, sync
 from aqt import qt, mw, utils
 from . import beeminder
 
-def get_maintained_progress(col):
-    caught_up = col.findCards("-is:suspended -is:new -is:due -is:buried")
-    return len(caught_up)
+
+projection_comment = "PESSIMISTIC PRESUMPTION (autodestructs with new data)"
+
+day_in_seconds = 24 * 60 * 60
+
+
+def get_maintained_progress(col, projection_days=0):
+    search_string = ("-is:suspended -is:new -is:buried -prop:due<=%s"
+                     % projection_days)
+    return len(col.findCards(search_string))
+
+
+def time_after_days(days):
+    return time.time() + days * day_in_seconds
+
 
 def update(col, show_info=False):
     config = mw.addonManager.getConfig(__name__)
     auth_token = config["auth_token"]
     goal_slug = config["goal"]["slug"]
+    days_ahead = config["pessemistic_reports"]["days_ahead"]
 
-    maintained_progress = get_maintained_progress(col)
+    datapoints = [beeminder.as_datapoint(get_maintained_progress(col, day),
+                                         time_after_days(day),
+                                         "" if day == 0 else projection_comment)
+                  for day in range(days_ahead+1)]
 
-    beeminder_result = beeminder.add_datapoint(auth_token,
-                                               goal_slug,
-                                               maintained_progress)
+    beeminder_result = beeminder.add_datapoints(auth_token,
+                                                goal_slug,
+                                                datapoints)
 
     if show_info:
         if beeminder_result["success?"]:
             info_string = ("Updated beeminder goal %s "
                         "with %s cards of maintained progress" %
-                        (goal_slug, maintained_progress))
+                        (goal_slug, datapoints[0]["value"]))
         else:
             info_string = ("There was a problem updating beeminder:\n\n"
                         + beeminder_result["error_message"])

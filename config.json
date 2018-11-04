@@ -1,4 +1,6 @@
 {"auth_token": "PUT_YOUR_BEEMINDER_AUTH_TOKEN_HERE",
  "goal": {"slug": "PUT_YOUR_BEEMINDER_GOAL_SHORT_NAME_HERE"},
  "update_after": {"syncing": true,
-                  "finishing_reviews": true}}
+                  "finishing_reviews": true},
+ "pessemistic_reports": {"days_ahead": 7,
+                         "hard_end": true}}
