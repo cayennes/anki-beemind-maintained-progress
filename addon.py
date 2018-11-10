@@ -4,7 +4,7 @@ from aqt import qt, mw, utils
 from . import beeminder
 
 
-projection_comment = "PESSIMISTIC PRESUMPTION (autodestructs with new data)"
+projection_comment = "PESSIMISTIC PROJECTION (update from anki after doing reviews)"
 
 day_in_seconds = 24 * 60 * 60
 

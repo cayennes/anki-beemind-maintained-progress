@@ -1,3 +1,4 @@
+from datetime import date
 import json
 import time
 import requests
@@ -27,9 +28,11 @@ def as_datapoint(value, timestamp=None, comment=None):
         timestamp = time.time()
     if comment is None:
         comment = ""
+    requestid = str(date.fromtimestamp(timestamp))
     return {"value": value,
             "timestamp": int(timestamp),
-            "comment": comment}
+            "comment": comment,
+            "requestid": requestid}
 
 
 def add_datapoints(auth_token, goal_slug, datapoints):
