@@ -9,9 +9,11 @@ projection_comment = "PESSIMISTIC PROJECTION (update from anki after doing revie
 day_in_seconds = 24 * 60 * 60
 
 
-def get_maintained_progress(col, projection_days=0):
-    search_string = ("-is:suspended -is:new -is:buried -prop:due<=%s"
-                     % projection_days)
+def get_maintained_progress(col, projection_days=0, search_filter=None):
+    if not search_filter:
+        search_filter = ""
+    search_string = ("-is:suspended -is:new -is:buried -prop:due<=%s %s"
+                     % (projection_days, search_filter))
     return len(col.findCards(search_string))
 
 
@@ -22,28 +24,33 @@ def time_after_days(days):
 def update(col, show_info=False):
     config = mw.addonManager.getConfig(__name__)
     auth_token = config["auth_token"]
-    goal_slug = config["goal"]["slug"]
     days_ahead = config["pessemistic_reports"]["days_ahead"]
 
-    datapoints = [beeminder.as_datapoint(get_maintained_progress(col, day),
-                                         time_after_days(day),
-                                         "" if day == 0 else projection_comment)
-                  for day in range(days_ahead+1)]
+    for goal in config["goals"]:
+        goal_slug = goal["beeminder_slug"]
+        search_filter = goal["filter"]
 
-    beeminder_result = beeminder.add_datapoints(auth_token,
-                                                goal_slug,
-                                                datapoints)
+        datapoints = [beeminder.as_datapoint(get_maintained_progress(col, day, search_filter),
+                                             time_after_days(day),
+                                             "" if day == 0 else projection_comment)
+                      for day in range(days_ahead+1)]
 
-    if show_info:
-        if beeminder_result["success?"]:
-            info_string = ("Updated beeminder goal %s "
-                        "with %s cards of maintained progress" %
-                        (goal_slug, datapoints[0]["value"]))
-        else:
-            info_string = ("There was a problem updating beeminder:\n\n"
-                        + beeminder_result["error_message"])
+        beeminder_result = beeminder.add_datapoints(auth_token,
+                                                    goal_slug,
+                                                    datapoints)
 
-        utils.showInfo(info_string)
+        if show_info:
+            if beeminder_result["success?"]:
+                filter_string = " in " + search_filter if search_filter else ""
+                info_string = ("Updated beeminder goal %s "
+                               "with %s cards of maintained progress"
+                               "%s" %
+                               (goal_slug, datapoints[0]["value"], filter_string))
+            else:
+                info_string = ("There was a problem updating beeminder:\n\n"
+                            + beeminder_result["error_message"])
+
+            utils.showInfo(info_string)
 
 
 def menu_update():
