@@ -12,7 +12,7 @@ day_in_seconds = 24 * 60 * 60
 def get_maintained_progress(col, projection_days=0, search_filter=None):
     if not search_filter:
         search_filter = ""
-    search_string = ("-is:suspended -is:new -is:buried -prop:due<=%s %s"
+    search_string = ("-is:suspended -is:new -is:due -is:buried -prop:due<=%s %s"
                      % (projection_days, search_filter))
     return len(col.findCards(search_string))
 
