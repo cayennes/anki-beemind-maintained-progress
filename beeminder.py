@@ -1,6 +1,4 @@
-from datetime import date
 import json
-import time
 import requests
 
 
@@ -23,23 +21,20 @@ def add_datapoint(auth_token, slug, value):
     return _result_dict(res)
 
 
-def as_datapoint(value, timestamp=None, comment=None):
-    if timestamp is None:
-        timestamp = time.time()
+def as_datapoint(value, date, comment=None):
     if comment is None:
         comment = ""
-    requestid = str(date.fromtimestamp(timestamp))
     return {"value": value,
-            "timestamp": int(timestamp),
+            "datestamp": date,
             "comment": comment,
-            "requestid": requestid}
+            "requestid": date}
 
 
 def add_datapoints(auth_token, goal_slug, datapoints):
     """post a list of datapoints to beeminder
 
     each datapoint is a map containing
-    * "timestamp" in epoch time
+    * "daystamp" a string representing the date
     * "value"
     * "comment"
     * optional "requestid"

@@ -1,4 +1,4 @@
-import time
+import datetime
 from anki import hooks, sync
 from aqt import qt, mw, utils
 from . import beeminder
@@ -17,8 +17,18 @@ def get_maintained_progress(col, projection_days=0, search_filter=None):
     return len(col.findCards(search_string))
 
 
-def time_after_days(days):
-    return time.time() + days * day_in_seconds
+def datestamp_in_days(col, days):
+    """Returns a string representing the date in a number of days
+
+    Uses anki's notion of what day it is, taking the day start preference into account"""
+    # this is based on code in anki preferences. number of hours past midnight.
+    rollover = col.conf.get("rollover", datetime.datetime.fromtimestamp(col.crt).hour)
+    if datetime.datetime.now().hour >= rollover:
+        today = datetime.date.today()
+    else:
+        today = datetime.date.today() - datetime.timedelta(1)
+    the_day = today + datetime.timedelta(days)
+    return str(the_day)
 
 
 def update(col, show_info=False):
@@ -31,7 +41,7 @@ def update(col, show_info=False):
         search_filter = goal["filter"]
 
         datapoints = [beeminder.as_datapoint(get_maintained_progress(col, day, search_filter),
-                                             time_after_days(day),
+                                             datestamp_in_days(col, day),
                                              "" if day == 0 else projection_comment)
                       for day in range(days_ahead+1)]
 
