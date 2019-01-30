@@ -9,9 +9,7 @@ projection_comment = "PESSIMISTIC PROJECTION (update from anki after doing revie
 day_in_seconds = 24 * 60 * 60
 
 
-def get_maintained_progress(col, projection_days=0, search_filter=None):
-    if not search_filter:
-        search_filter = ""
+def get_maintained_progress(col, projection_days, search_filter):
     search_string = ("-is:suspended -is:new -is:due -is:buried -prop:due<=%s %s"
                      % (projection_days, search_filter))
     return len(col.findCards(search_string))
@@ -38,7 +36,7 @@ def update(col, show_info=False):
 
     for goal in config["goals"]:
         goal_slug = goal["beeminder_slug"]
-        search_filter = goal["filter"]
+        search_filter = goal.get("filter", "")
 
         datapoints = [beeminder.as_datapoint(get_maintained_progress(col, day, search_filter),
                                              datestamp_in_days(col, day),
