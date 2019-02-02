@@ -25,7 +25,7 @@ def as_datapoint(value, date, comment=None):
     if comment is None:
         comment = ""
     return {"value": value,
-            "datestamp": date,
+            "daystamp": date,
             "comment": comment,
             "requestid": date}
 
