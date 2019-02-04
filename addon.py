@@ -4,8 +4,6 @@ from aqt import qt, mw, utils
 from . import beeminder
 
 
-projection_comment = "PESSIMISTIC PROJECTION (update from anki after doing reviews)"
-
 day_in_seconds = 24 * 60 * 60
 
 
@@ -34,13 +32,19 @@ def update(col, show_info=False):
     auth_token = config["auth_token"]
     days_ahead = config["pessemistic_reports"]["days_ahead"]
 
+    def projection_comment(day):
+        if day == 0:
+            return ""
+        else:
+            return "{}-day PESSIMISTIC PROJECTION (will be updated by anki addon)".format(day)
+
     for goal in config["goals"]:
         goal_slug = goal["beeminder_slug"]
         search_filter = goal.get("filter", "")
 
         datapoints = [beeminder.as_datapoint(get_maintained_progress(col, day, search_filter),
                                              datestamp_in_days(col, day),
-                                             "" if day == 0 else projection_comment)
+                                             projection_comment(day))
                       for day in range(days_ahead+1)]
 
         beeminder_result = beeminder.add_datapoints(auth_token,
