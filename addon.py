@@ -7,6 +7,50 @@ from . import beeminder
 day_in_seconds = 24 * 60 * 60
 
 
+# manage the goals
+
+
+# these things are checked the first time that a goal is updated each time anki
+# is launched both because it is quicker to implement this way than storing it
+# persistently, and we do want to recheck every so often for the unlikely case
+# that it has changed.
+checked_goals = {}
+
+
+def check_goals():
+    valid_goals = []
+    invalid_goals = []
+    config = mw.addonManager.getConfig(__name__)
+    for config_goal in config["goals"]:
+        goal = config_goal.copy()
+        goal_slug = goal["beeminder_slug"]
+        if goal_slug not in checked_goals:
+            if beeminder.doesnt_autosum(config["auth_token"], goal_slug):
+                res = beeminder.configure_api_goal(config["auth_token"], goal_slug)
+                if res["success?"]:
+                    valid_goals.append(goal)
+                else:
+                    goal["error"] = "Error configuring goal on beeminder: " + res["error_message"] + ". If you think this is resolved, restart anki and try again."
+                    invalid_goals.append(goal)
+            else:
+                goal["error"] = "This goal autosums data, which is not compatible with the data this addon produces. Create an odometer type goal."
+                invalid_goals.append(goal)
+            checked_goals["goal_slug"] = goal
+        elif checked_goals[goal_slug]:
+            valid_goals.append(goal)
+        else:
+            checked_goal = checked_goals[goal_slug]
+            if "error" in checked_goals:
+                invalid_goals.append(checked_goal)
+            else:
+                valid_goals.append(checked_goal)
+
+    return {"valid": valid_goals, "invalid": invalid_goals}
+
+
+# update the goal
+
+
 def get_maintained_progress(col, projection_days, search_filter):
     search_string = ("-is:suspended -is:new -is:due -is:buried -prop:due<=%s %s"
                      % (projection_days, search_filter))
@@ -38,7 +82,14 @@ def update(col, show_info=False):
         else:
             return "{}-day PESSIMISTIC PROJECTION (will be updated by anki addon)".format(day)
 
-    for goal in config["goals"]:
+    goals = check_goals()
+
+    if show_info:
+        for goal in goals["invalid"]:
+            info_string = ("Can't update goal %s: %s" % (goal["beeminder_slug"], goal["error"]))
+            utils.showInfo(info_string)
+
+    for goal in goals["valid"]:
         goal_slug = goal["beeminder_slug"]
         search_filter = goal.get("filter", "")
 

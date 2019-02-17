@@ -44,3 +44,29 @@ def add_datapoints(auth_token, goal_slug, datapoints):
                                    "auth_token": auth_token})
     return _result_dict(res)
 
+
+def get_goal_details(auth_token, goal_name):
+    url = api_url + "users/me/goals/" + goal_name + ".json"
+    params = {"auth_token": auth_token}
+    res = requests.get(url, params=params)
+    return res.json()
+
+
+def doesnt_autosum(auth_token, goal_name):
+    goal_details = get_goal_details(auth_token, goal_name)
+    return goal_details["kyoom"] == False
+
+
+def modify_goal(auth_token, goal_name, new_attributes):
+    url = api_url + "users/me/goals/" + goal_name + ".json"
+    data = new_attributes
+    data["auth_token"] = auth_token
+    res = requests.put(url, data=data)
+    return _result_dict(res)
+
+
+def configure_api_goal(auth_token, goal_name):
+    """sets odom to False and datasource to API
+
+    This is what we want because this is an API source and zeroes are zeroes, not odometer resets."""
+    return modify_goal(auth_token, goal_name, {"odom": False, "datasource": "api"})
