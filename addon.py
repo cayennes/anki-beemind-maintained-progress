@@ -7,6 +7,12 @@ from . import beeminder
 day_in_seconds = 24 * 60 * 60
 
 
+# when errors occur during the sync during loading, we need to queue them to
+# display once it is possible
+mw_loaded = False
+queued_errors = []
+
+
 # manage the goals
 
 
@@ -84,10 +90,12 @@ def update(col, show_info=False):
 
     goals = check_goals()
 
-    if show_info:
-        for goal in goals["invalid"]:
-            info_string = ("Can't update goal %s: %s" % (goal["beeminder_slug"], goal["error"]))
+    for goal in goals["invalid"]:
+        info_string = ("Can't update goal %s: %s" % (goal["beeminder_slug"], goal["error"]))
+        if mw_loaded:
             utils.showInfo(info_string)
+        else:
+            queued_errors.append(info_string)
 
     for goal in goals["valid"]:
         goal_slug = goal["beeminder_slug"]
@@ -116,11 +124,25 @@ def update(col, show_info=False):
             utils.showInfo(info_string)
 
 
+# deal with displaying queued errors after we have a mw
+
+
+def on_profile_loaded():
+    while queued_errors:
+        msg = queued_errors.pop(0)
+        utils.showInfo(msg)
+    mw_loaded = True
+
+
+hooks.addHook("profileLoaded", on_profile_loaded)
+
+
+# menu item
+
 def menu_update():
     update(mw.col, True)
 
 
-# menu item
 update_action = qt.QAction("Update Beeminder", mw)
 update_action.triggered.connect(menu_update)
 mw.form.menuTools.addAction(update_action)
