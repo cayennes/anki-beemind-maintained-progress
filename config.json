@@ -2,4 +2,4 @@
  "goals": [{"slug": "PUT_YOUR_BEEMINDER_GOAL_SHORT_NAME_HERE"}],
  "update_after": {"syncing": true,
                   "finishing_reviews": true},
- "pessemistic_reports": {"days_ahead": 7}}
+ "pessimistic_reports": {"days_ahead": 7}}

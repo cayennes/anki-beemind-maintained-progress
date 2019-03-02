@@ -80,7 +80,7 @@ def datestamp_in_days(col, days):
 def update(col, show_info=False):
     config = mw.addonManager.getConfig(__name__)
     auth_token = config["auth_token"]
-    days_ahead = config["pessemistic_reports"]["days_ahead"]
+    days_ahead = config["pessimistic_reports"]["days_ahead"]
 
     def projection_comment(day):
         if day == 0:
