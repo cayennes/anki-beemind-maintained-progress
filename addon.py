@@ -80,7 +80,7 @@ def datestamp_in_days(col, days):
 def update(col, show_info=False):
     config = mw.addonManager.getConfig(__name__)
     auth_token = config["auth_token"]
-    days_ahead = config["pessimistic_reports"]["days_ahead"]
+    days_ahead = config.get("pessimistic_reports", {}).get("days_ahead", 0)
 
     def projection_comment(day):
         if day == 0:
@@ -151,7 +151,7 @@ mw.form.menuTools.addAction(update_action)
 # optionally update after syncing or doing reviews
 def should_update(config_key):
     config = mw.addonManager.getConfig(__name__)
-    return config["update_after"][config_key]
+    return config["update_after"].get(config_key, False)
 
 
 def on_review_cleanup():
