@@ -10,3 +10,7 @@ Features:
 * Supports multiple goals, each tracking cards filtered by deck, tag, card type, note type, or anything else you can express as a search
 * It can post precise pessimistic reports so that if you don't sync one day beeminder will have the number that it should have if you didn't do any reviewing
 * Updates beeminder after syncing or exiting reviews (both of these are optional but on by default) or manually with a menu item
+
+This addon on AnkiWeb: https://ankiweb.net/shared/info/1928083890
+
+Install code: 1928083890
