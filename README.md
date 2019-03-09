@@ -12,9 +12,15 @@ Features:
 * Updates beeminder after syncing or exiting reviews (both of these are optional but on by default) or manually with a menu item
 
 How to use it:
-1. Make an odometer goal on beeminder (requires an infinibe plan)
+1. Make an odometer goal on beeminder (requires an infinibee plan)
 2. Go to the addon config (tools menu -> addons -> select this addon -> config button) and read the instructions there to set it up
 
 This addon on AnkiWeb: https://ankiweb.net/shared/info/1928083890
 
 Install code: 1928083890
+
+# License and Copyright
+
+This addon is available under the GNU Affero General Public License, the same as Anki.
+
+Copyright Cayenne Geis 2019
