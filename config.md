@@ -5,22 +5,22 @@
 Just one goal for your whole collection:
 
     {"auth_token": "tHis1sAf4keT0ken",
-     "goals": [{"slug": "anki-maintained-progress"}]}
+     "goals": [{"beeminder_slug": "anki-maintained-progress"}]}
 
 Several goals, for different things:
 
     {"auth_token": "tHis1sAf4keT0ken",
-     "goals": [{"slug": "japanese-maintained-progress",
+     "goals": [{"beeminder_slug": "japanese-maintained-progress",
                 "filter": "deck:Japanese"},
-               {"slug": "n4-maintained-progress",
+               {"beeminder_slug": "n4-maintained-progress",
                 "filter": "tag:n4"},
-               {"slug": "kanji-maintained-progress",
+               {"beeminder_slug": "kanji-maintained-progress",
                 "filter": "card:kanji"}]}
 
 `update_after`: Indicate whether or not you want the addon to update beeminder after syncing and/or finishing reviews.
 
     {"auth_token": "tHis1sAf4keT0ken",
-     "goals": [{"slug": "anki-maintained-progress"}],
+     "goals": [{"beeminder_slug": "anki-maintained-progress"}],
      "update_after": {"syncing": true,
                       "finishing_reviews": true}}
 
@@ -29,10 +29,10 @@ Several goals, for different things:
 This will produce pessimistic reports for the 14 days that a beeminder graph shows ahead:
 
     {"auth_token": "tHis1sAf4keT0ken",
-     "goals": [{"slug": "anki-maintained-progress"}],
+     "goals": [{"beeminder_slug": "anki-maintained-progress"}],
      "pessimistic_reports": {"days_ahead": 14}}
      
 This will turn them off:
 
     {"auth_token": "tHis1sAf4keT0ken",
-     "goals": [{"slug": "anki-maintained-progress"}]}
+     "goals": [{"beeminder_slug": "anki-maintained-progress"}]}
