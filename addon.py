@@ -4,6 +4,9 @@ from aqt import qt, mw, utils
 from . import beeminder
 
 
+placeholder_slug = "PUT_YOUR_BEEMINDER_GOAL_SHORT_NAME_HERE"
+
+
 day_in_seconds = 24 * 60 * 60
 
 
@@ -31,7 +34,9 @@ def check_goals():
         goal = config_goal.copy()
         goal_slug = goal["beeminder_slug"]
         if goal_slug not in checked_goals:
-            if beeminder.doesnt_autosum(config["auth_token"], goal_slug):
+            if goal["beeminder_slug"] == placeholder_slug:
+                pass
+            elif beeminder.doesnt_autosum(config["auth_token"], goal_slug):
                 res = beeminder.configure_api_goal(config["auth_token"], goal_slug)
                 if res["success?"]:
                     valid_goals.append(goal)
