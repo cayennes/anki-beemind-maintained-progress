@@ -24,7 +24,7 @@ Several goals, for different things:
      "update_after": {"syncing": true,
                       "finishing_reviews": true}}
 
-`pessimistic_reports`: If this is set, the addon will post pessimistic predictions for future days, so the goal will default to what your numbers would be if you don't do any reviews. The addon will automatically update these. The `days_ahead` value will indicate how many days of pessimistic reports to post.
+`pessimistic_reports`: If this is set to a number greater than 0, the addon will post pessimistic predictions for future days, so the goal will default to what your numbers would be if you don't do any reviews. The addon will automatically update these. The `days_ahead` value will indicate how many days of pessimistic reports to post.
 
 This will produce pessimistic reports for the 14 days that a beeminder graph shows ahead:
 
@@ -35,4 +35,5 @@ This will produce pessimistic reports for the 14 days that a beeminder graph sho
 This will turn them off:
 
     {"auth_token": "tHis1sAf4keT0ken",
-     "goals": [{"beeminder_slug": "anki-maintained-progress"}]}
+     "goals": [{"beeminder_slug": "anki-maintained-progress"}]
+     "pessimistic_reports": {"days_ahead": 0}}
