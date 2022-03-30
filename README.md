@@ -42,10 +42,17 @@
 
 ### Testing
 
+By default, this add-on should send Beeminder new data
+- after reviews,
+- after syncing, and
+- any time you click `Tools -> Update Beeminder` by hand.
+
+These instructions test the first one.
+
 0. Open your Beeminder goal and go to the "Data" tab.
 0. Open Anki.
 0. Review a few cards.
-0. Leave reviewing; do an Anki sync if possible.
+0. Leave reviewing by hitting `D` or clicking `Decks`.
 0. Refresh the Beeminder page on the "Data" tab.
 0. If a new line has been added, congratulations - it's working!
 
