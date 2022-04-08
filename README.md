@@ -86,6 +86,15 @@ An Odometer goal is similar to a Do More goal with one difference: You send the 
 
 Simply put, this is an Odometer goal because _cards can both fall into and out of rotestock_. It's much more straightforward to just count up however many cards are currently in rotestock and send that to Beeminder. You're just trying to count the number of cards in the database right now that are not currently in `New`, `Due` or `Learning`.
 
+## What if I don't want to force myself to add more cards every day? Can I make a Beeminder goal to just force me to do the reviews I have every day with this?
+
+Almost yes, _if_ you have the [Bee Plus](https://www.beeminder.com/premium), which gives you `Automatically trim safety buffer`.
+
+- Create an Odometer goal with `+1` growth, the minimum possible. You will have to review at least 1 new card per day in addition to your reviews, but that should be fine.
+- Turn on `Auto-Ratchet` on that goal to 0 days.
+
+Every time your rotestock goes up, this goal in Beeminder will ratchet up to force you to at least maintain that level.
+
 ## What should my Beeminder goal be?
 
 There are a few ways to decide on this.
