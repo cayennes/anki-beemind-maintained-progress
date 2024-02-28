@@ -63,7 +63,7 @@ def check_goals():
 
 
 def get_maintained_progress(col, projection_days, search_filter):
-    search_string = ("-is:suspended -is:new -is:due -is:buried -prop:due<=%s %s"
+    search_string = ("-is:suspended -is:new -is:due -prop:due<=%s %s"
                      % (projection_days, search_filter))
     return len(col.findCards(search_string))
 
