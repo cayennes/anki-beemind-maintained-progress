@@ -1,6 +1,5 @@
 import datetime
-from anki import hooks, sync
-from aqt import qt, mw, utils
+from aqt import qt, mw, utils, gui_hooks
 from . import beeminder
 
 
@@ -138,8 +137,7 @@ def on_profile_loaded():
         utils.showInfo(msg)
     mw_loaded = True
 
-
-hooks.addHook("profileLoaded", on_profile_loaded)
+gui_hooks.profile_did_open.append(on_profile_loaded)
 
 
 # menu item
@@ -163,19 +161,11 @@ def on_review_cleanup():
     if should_update("finishing_reviews"):
         update(mw.col)
 
-
-hooks.addHook("reviewCleanup", on_review_cleanup)
-
-
-orig_sync = sync.Syncer.sync
+gui_hooks.reviewer_will_end.append(on_review_cleanup)
 
 
-def new_sync(self):
-    ret = orig_sync(self)
+def on_sync_did_finish():
     if should_update("syncing"):
-        update(self.col)
-    return ret
+        update(mw.col)
 
-
-sync.Syncer.sync = new_sync
-
+gui_hooks.sync_did_finish.append(on_sync_did_finish)
