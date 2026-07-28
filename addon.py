@@ -1,7 +1,8 @@
 import datetime
-from aqt import qt, mw, utils, gui_hooks
-from . import beeminder
 
+from aqt import gui_hooks, mw, qt, utils
+
+from . import beeminder
 
 placeholder_slug = "PUT_YOUR_BEEMINDER_GOAL_SHORT_NAME_HERE"
 
@@ -146,7 +147,10 @@ def menu_update():
     update(mw.col, True)
 
 
+# Create a shortcut for updating Beeminder
+shortcut = "Ctrl+Shift+B"  # Qt will automatically map Ctrl to Cmd on macOS
 update_action = qt.QAction("Update Beeminder", mw)
+update_action.setShortcut(qt.QKeySequence(shortcut))
 update_action.triggered.connect(menu_update)
 mw.form.menuTools.addAction(update_action)
 
