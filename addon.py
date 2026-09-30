@@ -84,6 +84,12 @@ def datestamp_in_days(col, days):
 
 def update(col, show_info=False):
     config = mw.addonManager.getConfig(__name__)
+    if "profile" in config and config["profile"] != mw.pm.name:
+        if show_info:
+            utils.showInfo("Beeminder was not updated because the \"%s\" profile is active and the addon is configured to update from the \"%s\" profile."
+                            %
+                           (mw.pm.name, config["profile"]))
+        return
     auth_token = config["auth_token"]
     days_ahead = config.get("pessimistic_reports", {}).get("days_ahead", 0)
 

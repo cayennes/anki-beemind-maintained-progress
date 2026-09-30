@@ -1,5 +1,7 @@
 `auth_token`: Your beeminder auth token. You can find it in the "Apps and API" tab of your account settings on beeminder.
 
+`profile` (optional): Your anki profile name. When this is provided, the addon only updates beeminder from that profile.
+
 `goals`: Your beeminder goals. Goals can track maintained progress of your whole collection, or you can filter by deck, tag, note type, or anything else that you can search for. Examples:
 
 Just one goal for your whole collection:
